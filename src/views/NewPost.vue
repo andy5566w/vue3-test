@@ -8,13 +8,14 @@ const post: TimelinePost = {
   id: -1,
   title: 'Title',
   created: DateTime.now(),
+  markdown: '## Title',
 }
 const testText = ref('This is test text')
 </script>
 
 <template>
   <PostWriter :post="post" v-model:test-text="testText" />
-  <p>testText: {{ testText }}</p>
+  <!--  <p>testText: {{ testText }}</p>-->
 </template>
 
 <style scoped></style>
