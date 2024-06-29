@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { TimelinePost } from '@/posts'
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch, watchEffect } from 'vue'
+import { marked } from 'marked'
 
 const props = defineProps<{
   post: TimelinePost
@@ -8,6 +9,7 @@ const props = defineProps<{
 }>()
 const title = ref(props.post.title)
 const content = ref(props.post.markdown)
+const html = ref('')
 
 const emit = defineEmits(['update:testText'])
 const moduleText = computed({
@@ -32,6 +34,22 @@ const handleInput = () => {
   }
   content.value = contentEditable.value.innerText
 }
+
+watchEffect(() => {
+  marked.parse(content.value, (err, parseResult) => {
+    html.value = parseResult
+  })
+})
+
+// watch(
+//   () => content.value,
+//   (newContent) => {
+//     marked.parse(newContent, (err, parseResult) => {
+//       html.value = parseResult
+//     })
+//   },
+//   { immediate: true },
+// )
 </script>
 
 <template>
@@ -51,7 +69,9 @@ const handleInput = () => {
         {{ content }}
       </div>
     </div>
-    <div class="column">{{ content }}</div>
+    <div class="column">
+      <div v-html="html"></div>
+    </div>
   </div>
 </template>
 
